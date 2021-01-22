@@ -1,0 +1,11 @@
+name: inference_env
+dependencies:
+  - python=3.8.5
+  - mlflow
+  - h5py
+  - pandas
+  - numpy
+  - Pillow
+  - pip
+  - pip :
+    - tensorflow==2.3.1

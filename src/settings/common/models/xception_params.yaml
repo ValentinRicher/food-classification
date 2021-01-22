@@ -1,0 +1,12 @@
+img_height: 160
+img_width: 160
+img_n_channels: 3
+n_epochs: 50
+learning_rate: 0.0001
+batch_size: 32
+fine_tuning: True
+fine_tuning_epochs: 50
+fine_tuning_lr: 0.00001
+test_mode: 0
+dataset: "food-101_160_160"
+# weights: "mobilenet_v2_weights_tf_dim_ordering_tf_kernels_1.0_224_no_top.h5"
