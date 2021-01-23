@@ -129,6 +129,18 @@ class KerasClassifier(Classifier):
                 metrics=[tf.keras.metrics.CategoricalAccuracy()],
             )
 
+            # TODO
+            # https://arxiv.org/pdf/1905.11946v5.pdf
+            # tf.keras.optimizers.RMSprop(
+            #     learning_rate=0.001,
+            #     rho=0.9,
+            #     momentum=0.0,
+            #     epsilon=1e-07,
+            #     centered=False,
+            #     name="RMSprop",
+            #     **kwargs
+            # )
+
             history = self.model.fit(
                 train_dataset,
                 initial_epoch=history.epoch[-1],

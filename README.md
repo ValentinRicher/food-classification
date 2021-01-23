@@ -1,10 +1,8 @@
-#  Food-101
+#  Food classific
 
 # Setup 
 
 ## MLflow
 
 ## TensorBoard
-
-
 
