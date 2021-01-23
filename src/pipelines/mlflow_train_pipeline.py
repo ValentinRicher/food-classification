@@ -12,10 +12,11 @@ import plotly
 import plotly.graph_objects as go
 import tensorflow as tf
 from src.classifiers.MobileNetV2 import InferMobileNetV2, MobileNetV2
-from src.settings.settings import logging, mobilenetv2_params, xception_params
+from src.settings.settings import logging, mobilenetv2_params, xception_params, efficientnetb0_params, efficientnetb4_params
 from src.tools.dataset import manual_get_datasets
 import pandas as pd
 from src.classifiers.Xception import Xception
+from src.classifiers.EfficientNetB0 import EfficientNetB0
 from src.settings.settings import paths
 
 
@@ -36,6 +37,10 @@ def train(exp_name, tracking_uri):
         params = mobilenetv2_params
     elif exp_name == "xception":
         params = xception_params
+    elif exp_name == "efficientnetb0":
+        params = efficientnetb0_params
+    elif exp_name == "efficientnetb4":
+        params = efficientnetb4_params
 
     data_path = paths["data"]["DATA_DIR"]
     train_dir = os.path.join(data_path, params["dataset"], "train_directory")
@@ -87,6 +92,10 @@ def train(exp_name, tracking_uri):
             )
         elif exp_name == "xception":
             model = Xception((150, 150, 3))
+        elif exp_name == "efficientnetb0":
+            model = EfficientNetB0((150, 150, 3))
+        elif exp_name == "efficientnetb4":
+            model = EfficientNetB0((150, 150, 3))
 
 
 

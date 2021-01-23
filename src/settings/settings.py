@@ -33,6 +33,17 @@ with open(
 ) as f:
     xception_params = yaml.load(f, Loader=yaml.FullLoader)
 
+with open(
+    Path(__file__).parent.joinpath("common", "models", "efficientnetb0_params.yaml"),
+    "r",
+) as f:
+    efficientnetb0_params = yaml.load(f, Loader=yaml.FullLoader)
+
+with open(
+    Path(__file__).parent.joinpath("common", "models", "efficientnetb4_params.yaml"),
+    "r",
+) as f:
+    efficientnetb4_params = yaml.load(f, Loader=yaml.FullLoader)
 
 if Path.exists(Path(__file__).parent.joinpath("common", "azure_config.conf")):
     azure_config = ConfigFactory.parse_file(
