@@ -69,10 +69,10 @@ def manual_get_datasets(train_data_dir, test_data_dir, params):
         # convert the compressed string to a 3D uint8 tensor
         img = tf.image.decode_jpeg(img, channels=3)
 
-        # # resize the image to the desired size
-        # img_height = params["img_height"]
-        # img_width = params["img_width"]
-        # img = tf.image.resize(img, [img_height, img_width])
+        # resize the image to the desired size
+        img_height = params["img_height"]
+        img_width = params["img_width"]
+        img = tf.image.resize(img, [img_height, img_width])
         return img
 
     def process_path(file_path):
@@ -96,7 +96,7 @@ def manual_get_datasets(train_data_dir, test_data_dir, params):
     # test_ds = test_ds.batch(params["batch_size"])
 
     def configure_for_performance(ds):
-        ds = ds.cache()
+        # ds = ds.cache()
         # ds = ds.shuffle(buffer_size=100000)
         ds = ds.batch(params["batch_size"])
         ds = ds.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)

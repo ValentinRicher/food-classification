@@ -3,6 +3,7 @@ from io import BytesIO
 import numpy as np
 from PIL import Image
 from pathlib import Path
+import os
 
 
 def decode_and_resize_image(raw_bytes, size):
@@ -96,6 +97,8 @@ def convert_from_jpg_to_jpeg(old_dir, new_dir):
                 img.save(new_path, 'jpeg')
                 print('New image created: {}'.format(new_path))
 
-# resize_images("/home/vricher/example-image/data/food-101", 160, 160)
-# read_images("/home/vricher/example-image/data/food-101_160_160")
+# if __name__ == "__main__":
+    # resize_images("/home/vricher/example-image/data/food-101", 224, 224)
+    # read_images("/home/vricher/example-image/data/food-101_160_160")
+    
 

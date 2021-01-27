@@ -6,7 +6,7 @@ from codecarbon import EmissionsTracker
 
 
 tracking_uri = "http://127.0.0.1:5000"
-exp_name = "efficientnetb4"
+exp_name = "efficientnetb0"
 
 
 # tracker = EmissionsTracker()

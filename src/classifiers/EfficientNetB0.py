@@ -14,12 +14,14 @@ class EfficientNetB0(KerasClassifier):
     Only the last layers have been modified to suit the used case.
     """
 
-    def __init__(self, input_shape):
+    def __init__(self, transfer_learning, fine_tuning, input_shape, weights):
         super().__init__()
-        self.model = self.create_model(input_shape)
-        # import time
-        # print("Load model")
-        # time.sleep(30)
+        if transfer_learning:
+            self.model = self.create_model(input_shape)    
+        elif fine_tuning: # fine-tuning only
+            self.model = tf.keras.models.load_model(weights, compile=False)
+        else:
+            raise("Transfer learning or fine tuning or both must be selected")
 
     def create_model(
         self,

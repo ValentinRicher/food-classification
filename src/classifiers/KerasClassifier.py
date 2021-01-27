@@ -49,6 +49,7 @@ class KerasClassifier(Classifier):
         self,
         train_dataset,
         validation_dataset,
+        transfer_learning,
         n_epochs,
         learning_rate,
         fine_tuning=True,
@@ -74,12 +75,6 @@ class KerasClassifier(Classifier):
             The parameters like the loss that are saved during training.
         """
 
-        self.model.compile(
-            optimizer=tf.keras.optimizers.Adam(lr=learning_rate),
-            loss=tf.keras.losses.CategoricalCrossentropy(),
-            metrics=[tf.keras.metrics.CategoricalAccuracy()],
-        )
-
         now_date = "{:%Y_%m_%d_%H_%M_%S}".format(datetime.now())
         logdir = "logs/" + now_date
         tensorboard_callback = tf.keras.callbacks.TensorBoard(
@@ -88,7 +83,7 @@ class KerasClassifier(Classifier):
         file_writer_cm = tf.summary.create_file_writer(logdir + "/cm")
 
         es = tf.keras.callbacks.EarlyStopping(
-            monitor="val_loss", mode="min", verbose=1, patience=5
+            monitor="val_loss", mode="min", verbose=1, patience=3
         )
         mc = tf.keras.callbacks.ModelCheckpoint(
             "best_model.h5",
@@ -100,35 +95,7 @@ class KerasClassifier(Classifier):
 
         cc = CustomCallback(validation_dataset, file_writer_cm)
 
-        history = self.model.fit(
-            train_dataset,
-            epochs=n_epochs,
-            validation_data=validation_dataset,
-            callbacks=[
-                tensorboard_callback,
-                es,
-                mc,
-                cc,
-            ],
-        )
-
-        # logging.debug(history.history.keys())
-
-        # https://keras.io/guides/transfer_learning/
-        # https://www.tensorflow.org/tutorials/images/transfer_learning
-
-        if fine_tuning:
-            for layer in self.model.layers[: len(self.model.layers)]:
-                layer.trainable = True
-
-            self.model.summary()
-
-            self.model.compile(
-                optimizer=tf.keras.optimizers.Adam(lr=fine_tuning_lr),
-                loss=tf.keras.losses.CategoricalCrossentropy(),
-                metrics=[tf.keras.metrics.CategoricalAccuracy()],
-            )
-
+        if transfer_learning:
             # TODO
             # https://arxiv.org/pdf/1905.11946v5.pdf
             # tf.keras.optimizers.RMSprop(
@@ -141,10 +108,72 @@ class KerasClassifier(Classifier):
             #     **kwargs
             # )
 
+
+            # tf.keras.optimizers.Adam(lr=learning_rate)
+
+            self.model.compile(
+                # optimizer=tf.keras.optimizers.RMSprop(
+                #     learning_rate=0.001,
+                #     rho=0.9,
+                #     momentum=0.9,
+                #     epsilon=1e-07,
+                #     centered=False,
+                #     name="RMSprop",
+                # ),
+                optimizer=tf.keras.optimizers.Adam(lr=learning_rate),
+                loss=tf.keras.losses.CategoricalCrossentropy(),
+                metrics=[tf.keras.metrics.CategoricalAccuracy()],
+            )
+
             history = self.model.fit(
                 train_dataset,
-                initial_epoch=history.epoch[-1],
-                epochs=history.epoch[-1] + fine_tuning_epochs + 1,
+                epochs=n_epochs,
+                validation_data=validation_dataset,
+                callbacks=[
+                    tensorboard_callback,
+                    es,
+                    mc,
+                    cc,
+                ],
+            )
+
+        # logging.debug(history.history.keys())
+
+        # https://keras.io/guides/transfer_learning/
+        # https://www.tensorflow.org/tutorials/images/transfer_learning
+
+        if fine_tuning:
+            for layer in self.model.layers[: len(self.model.layers)]:
+                layer.trainable = True
+
+            self.model.summary()
+
+            print("summary")
+
+            self.model.compile(
+                # optimizer=tf.keras.optimizers.RMSprop(
+                #     learning_rate=0.001/10,
+                #     rho=0.9,
+                #     momentum=0.9,
+                #     epsilon=1e-07,
+                #     centered=False,
+                #     name="RMSprop",
+                # ),
+                optimizer=tf.keras.optimizers.Adam(lr=fine_tuning_lr),
+                loss=tf.keras.losses.CategoricalCrossentropy(),
+                metrics=[tf.keras.metrics.CategoricalAccuracy()],
+            )
+
+            try: # if transfer_learning before
+                history
+                initial_epoch = history.epoch[-1]
+            except NameError:
+                initial_epoch = 0
+
+            history = self.model.fit(
+                train_dataset,
+                initial_epoch=initial_epoch,
+                epochs=initial_epoch + fine_tuning_epochs + 1,
                 validation_data=validation_dataset,
                 callbacks=[tensorboard_callback, es, mc, cc],
             )

@@ -17,6 +17,7 @@ from src.tools.dataset import manual_get_datasets
 import pandas as pd
 from src.classifiers.Xception import Xception
 from src.classifiers.EfficientNetB0 import EfficientNetB0
+from src.classifiers.EfficientNetB4 import EfficientNetB4
 from src.settings.settings import paths
 
 
@@ -91,11 +92,11 @@ def train(exp_name, tracking_uri):
                 ),
             )
         elif exp_name == "xception":
-            model = Xception((150, 150, 3))
+            model = Xception((params["img_height"], params["img_width"], params["img_n_channels"]))
         elif exp_name == "efficientnetb0":
-            model = EfficientNetB0((150, 150, 3))
+            model = EfficientNetB0(transfer_learning=True, fine_tuning=True, input_shape=(params["img_height"], params["img_width"], params["img_n_channels"]), weights=os.path.join(paths["model"]["WEIGHTS_DIR"], params["weights"]))
         elif exp_name == "efficientnetb4":
-            model = EfficientNetB0((150, 150, 3))
+            model = EfficientNetB4((params["img_height"], params["img_width"], params["img_n_channels"]))
 
 
 
@@ -110,6 +111,7 @@ def train(exp_name, tracking_uri):
         history, cc = model.train(
             train_dataset,
             validation_dataset,
+            transfer_learning=params["transfer_learning"],
             n_epochs=params["n_epochs"],
             learning_rate=params["learning_rate"],
             fine_tuning=params["fine_tuning"],
@@ -177,7 +179,7 @@ def train(exp_name, tracking_uri):
         cm = cc.cm_images[best_epoch]
         cm_path = os.path.join(tmpdir, "confusion_matrix.png")
         cm.savefig(cm_path)
-        mlflow.log_artifact(report_path, artifact_path="confusion_matrix.png")
+        mlflow.log_artifact(cm_path, artifact_path="confusion_matrix")
 
 
         # Save the model
