@@ -3,16 +3,12 @@ import os
 import shutil
 from pathlib import Path
 
-from src.settings.settings import paths
-
-from PIL import Image
-import shutil
-import tensorflow as tf
+import imgaug.augmenters as iaa
 import numpy as np
-from pathlib import Path
-
+import tensorflow as tf
+from src.settings.settings import paths
 from tensorflow.keras.preprocessing import image_dataset_from_directory
-
+from src.settings.settings import logging
 
 
 def create_train_test_folders(dest_dir: str, image_file: str) -> None:
@@ -53,8 +49,15 @@ def manual_get_datasets(train_data_dir, test_data_dir, params):
     test_data_dir = Path(test_data_dir)
 
     train_ds = tf.data.Dataset.list_files(str(train_data_dir/"*/*.jpg"), shuffle=True)
+    if params["augment"]:
+        temp_ds = train_ds
+        for _ in range(params["aug_factor"]-1):
+            temp_ds = temp_ds.concatenate(train_ds)
+        train_ds = temp_ds
+    logging.debug("Size of the training dataset: {}".format(len(train_ds)))
 
     test_ds = tf.data.Dataset.list_files(str(test_data_dir/"*/*.jpg"), shuffle=True)
+    logging.debug("Size of the testing dataset: {}".format(len(test_ds)))
 
     class_names = np.array(sorted([item.name for item in train_data_dir.glob('*') if item.name not in ["LICENSE.txt", ".DS_Store"]]))
 
@@ -68,42 +71,73 @@ def manual_get_datasets(train_data_dir, test_data_dir, params):
     def decode_img(img):
         # convert the compressed string to a 3D uint8 tensor
         img = tf.image.decode_jpeg(img, channels=3)
+        return img
 
+    def resize_img(img):
         # resize the image to the desired size
         img_height = params["img_height"]
         img_width = params["img_width"]
         img = tf.image.resize(img, [img_height, img_width])
+        img = tf.cast(img, dtype=tf.uint8)
         return img
 
-    def process_path(file_path):
+    def img_aug(img):
+        seq = iaa.Sequential([
+            iaa.CropAndPad(percent=(-0.25, 0.25)),
+            iaa.Rotate((-45, 45)),
+            iaa.Fliplr(0.5),
+        ])
+        # TODO 
+        # add translation
+        # gaussian noise
+        img = seq(image=img)
+        return img
+
+
+    @tf.function(input_signature=[tf.TensorSpec((params["img_height"], params["img_width"], params["img_n_channels"]), tf.uint8)])
+    def tf_img_aug(input):
+        aug_img = tf.numpy_function(img_aug, [input], tf.uint8)
+        return aug_img
+
+    def process_path(file_path, resize, augment):
+        """Processes the datasets. 
+
+        Parameters
+        ----------
+        file_path : str
+            Path to the image.
+        augment : bool
+            If training images needs to be augmented or not.
+
+        Returns
+        -------
+        img, label
+            The image and the label.
+        """
+
         label = get_label(file_path)
         # load the raw data from the file as a string
         img = tf.io.read_file(file_path)
         img = decode_img(img)
+
+        if resize:
+            img = resize_img(img)
+
+        if augment:
+            img = tf_img_aug(img)
+            img = tf.reshape(img, shape=(params["img_height"], params["img_width"], params["img_n_channels"]))
+
         return img, label
 
-    # Set `num_parallel_calls` so multiple images are loaded/processed in parallel.
-    # train_ds = train_ds.map(process_path, num_parallel_calls=AUTOTUNE)
     parallel_calls = tf.data.experimental.AUTOTUNE
-
-    # train_ds = train_ds.map(process_path)
-    # test_ds = test_ds.map(process_path) 
-
-    train_ds = train_ds.map(process_path, num_parallel_calls=parallel_calls)
-    test_ds = test_ds.map(process_path, num_parallel_calls=parallel_calls)
-
-    # train_ds = train_ds.batch(params["batch_size"])
-    # test_ds = test_ds.batch(params["batch_size"])
+    train_ds = train_ds.map(lambda x: process_path(x, resize=params["resize"], augment=params["augment"]), num_parallel_calls=parallel_calls)
+    test_ds = test_ds.map(lambda x: process_path(x, resize=params["resize"], augment=False), num_parallel_calls=parallel_calls)
 
     def configure_for_performance(ds):
-        # ds = ds.cache()
-        # ds = ds.shuffle(buffer_size=100000)
+        # ds = ds.cache() # only if the dataset fit in memory
         ds = ds.batch(params["batch_size"])
         ds = ds.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
         return ds
-
-    # train_ds = train_ds.prefetch(tf.data.experimental.AUTOTUNE)
-    # test_ds = test_ds.prefetch(tf.data.experimental.AUTOTUNE)
 
     train_ds = configure_for_performance(train_ds)
     test_ds = configure_for_performance(test_ds)
@@ -136,6 +170,7 @@ def auto_get_datasets(train_dir, test_dir, params):
     )
 
     train_dataset = train_dataset.prefetch(tf.data.experimental.AUTOTUNE)
+
     validation_dataset = validation_dataset.prefetch(tf.data.experimental.AUTOTUNE)
 
     return train_dataset, validation_dataset
