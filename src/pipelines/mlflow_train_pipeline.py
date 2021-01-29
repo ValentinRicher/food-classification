@@ -156,8 +156,8 @@ def train(exp_name, tracking_uri):
         plotly.offline.plot(loss_fig, filename=loss_path, auto_open=False)
         plotly.offline.plot(metric_fig, filename=metric_path, auto_open=False)
         logging.debug(tmpdir)
-        mlflow.log_artifact(loss_path, artifact_path="graphs/loss.html")
-        mlflow.log_artifact(metric_path, artifact_path="graphs/accuracy.html")
+        mlflow.log_artifact(loss_path, artifact_path="graphs")
+        mlflow.log_artifact(metric_path, artifact_path="graphs")
 
         # Save the best metric
 
