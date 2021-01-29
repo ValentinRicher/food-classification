@@ -29,7 +29,7 @@ for gpu in gpus:
 
 # tf.debugging.set_log_device_placement(True)
 
-logging.debug(mobilenetv2_params)
+# logging.debug(mobilenetv2_params)
 
 
 def train(exp_name, tracking_uri):
@@ -67,13 +67,11 @@ def train(exp_name, tracking_uri):
 
         logging.info("Run ID : {}".format(run.info.run_id))
 
-        # All parameters are logged once thanks to mobilenetv2_params.yaml
+        # All parameters are logged once yaml file
         mlflow.log_params(params)
-        # # For AzureML
-        # mlflow.set_tags(mobilenetv2_params)
 
         train_dataset, validation_dataset = manual_get_datasets(train_dir, test_dir, params)
-        # train_dataset, validation_dataset = auto_get_datasets(train_dir, test_dir, mobilenetv2_params)
+        # train_dataset, validation_dataset = auto_get_datasets(train_dir, test_dir, params)
 
         if params["test_mode"]:
             train_dataset = train_dataset.take(10)
@@ -126,25 +124,25 @@ def train(exp_name, tracking_uri):
 
         loss_fig = go.Figure()
         loss_fig.add_trace(
-            go.Scatter(x=np.arange(mobilenetv2_params["n_epochs"]), y=loss, name="loss")
+            go.Scatter(x=np.arange(params["n_epochs"]), y=loss, name="loss")
         )
         loss_fig.add_trace(
             go.Scatter(
-                x=np.arange(mobilenetv2_params["n_epochs"]), y=val_loss, name="val_loss"
+                x=np.arange(params["n_epochs"]), y=val_loss, name="val_loss"
             )
         )
 
         metric_fig = go.Figure()
         metric_fig.add_trace(
             go.Scatter(
-                x=np.arange(mobilenetv2_params["n_epochs"]),
+                x=np.arange(params["n_epochs"]),
                 y=categorical_accuracy,
                 name="categorical_accuracy",
             )
         )
         metric_fig.add_trace(
             go.Scatter(
-                x=np.arange(mobilenetv2_params["n_epochs"]),
+                x=np.arange(params["n_epochs"]),
                 y=val_categorical_accuracy,
                 name="val_categorical_accuracy",
             )
