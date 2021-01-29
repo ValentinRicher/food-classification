@@ -1,2 +1,5 @@
 data augmentation
 rmsprop optimizer
+classification head
+resolve graphs display
+get the number of parameters of the model

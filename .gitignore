@@ -186,3 +186,6 @@ HOWTO/
 installs/
 src/application/azure/
 environment.yml
+summary_fine-tuning.txt
+summary_transfer-learning.txt
+nohup.out

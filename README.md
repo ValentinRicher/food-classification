@@ -1,17 +1,16 @@
-#  Food classific
+#  Food classification
+
+Personal project for image classification on Food-101 dataset.  
+This project has 2 goals :
+- Optimize training time with TF Profiler -> DONE. I divided by 3 training times.
+- Get best performance on Food-101 dataset using transfer learning and fine-tuning techniques based on papers in references.txt. -> IN PROGRESS.
+- Intelligibility of the decisions taken by the algorithm. -> TODO.
 
 # Setup 
 
-## MLflow
-
-## TensorBoard
+Create a virtual environment and install librairies in `requirements.txt`
 
 # Benchmark
 
 https://paperswithcode.com/sota/fine-grained-image-classification-on-food-101
 https://github.com/stratospark/food-101-keras
-
-
-This project is about 2 things :
-- Optimizing training with TF Profiler
-- Transfer learning
