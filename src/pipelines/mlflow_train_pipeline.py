@@ -179,6 +179,12 @@ def train(exp_name, tracking_uri):
         cm.savefig(cm_path)
         mlflow.log_artifact(cm_path, artifact_path="confusion_matrix")
 
+        # Save the summaries
+        if params["transfer_learning"]:
+            mlflow.log_artifact("summary_transfer-learning.txt", artifact_path="summaries")
+        if params["fine_tuning"]:
+            mlflow.log_artifact("summary_fine-tuning.txt", artifact_path="summaries")
+
 
         # Save the model
 
