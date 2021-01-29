@@ -49,7 +49,8 @@ class EfficientNetB0(KerasClassifier):
         base_model.trainable = False
         logging.info("Base model has {} layers".format(len(base_model.layers)))
         x = base_model(x, training=False)
-        outputs = self.get_classification_head(x)
+        # outputs = self.get_classification_head(x)
+        outputs = self.get_new_classification_head(x)
         model = tf.keras.Model(inputs, outputs)
 
         model.summary()
@@ -96,3 +97,44 @@ class EfficientNetB0(KerasClassifier):
             101, activation="softmax", name="prediction_layer"
         )(x)
         return prediction_layer
+
+    def get_new_classification_head(self, x):
+        global_average_layer = tf.keras.layers.GlobalAveragePooling2D()(x)
+        print("avg layer {}".format(global_average_layer.shape))
+        global_max_layer = tf.keras.layers.GlobalMaxPooling2D()(x)
+        print("max layer {}".format(global_max_layer.shape))
+
+        concatted = tf.keras.layers.Concatenate()([global_average_layer, global_max_layer])
+        print("concatted {}".format(concatted.shape))
+        # print(concatted)
+        # flattened = tf.keras.layers.Flatten()(concatted)
+        # print("flattened {}".format(flattened.shape))
+
+        # nn.BatchNorm1d(inp*2,eps=1e-05, momentum=0.1, affine=True)
+        bn1 = tf.keras.layers.BatchNormalization()(concatted)
+        print("bn1 {}".format(bn1.shape))
+        # print(bn1)
+        drop1 = tf.keras.layers.Dropout(0.2)(bn1)
+
+        # dense1 = tf.keras.layers.Dense(1280, activation="relu")(drop1)
+        # bn2 = tf.keras.layers.BatchNormalization(epsilon=1e-05, momentum=0.1)(dense1)
+        # drop2 = tf.keras.layers.Dropout(0.2)(bn2)
+
+        prediction_layer = tf.keras.layers.Dense(101, activation="softmax", name="prediction_layer")(drop1)
+
+        print(prediction_layer.shape)
+
+        return prediction_layer
+
+
+if __name__ == "__main__": # to test the classification heads
+
+    input_shape = (8, 7, 7, 1280)
+    x = tf.random.normal(input_shape)
+
+    model = EfficientNetB0(True, True, (224, 224, 3), None)
+
+    # pred_layer = model.get_classification_head(x)
+    # print(pred_layer.shape)
+
+    new_pred_layer = model.get_new_classification_head(x)
