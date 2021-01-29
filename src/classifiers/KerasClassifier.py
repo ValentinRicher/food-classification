@@ -125,6 +125,11 @@ class KerasClassifier(Classifier):
                 metrics=[tf.keras.metrics.CategoricalAccuracy()],
             )
 
+            # Open the file
+            with open('summary_transfer-learning.txt','w') as fh:
+                # Pass the file handle in as a lambda function to make it callable
+                self.model.summary(print_fn=lambda x: fh.write(x + '\n'))
+
             history = self.model.fit(
                 train_dataset,
                 epochs=n_epochs,
@@ -146,9 +151,6 @@ class KerasClassifier(Classifier):
             for layer in self.model.layers[: len(self.model.layers)]:
                 layer.trainable = True
 
-            self.model.summary()
-
-            print("summary")
 
             self.model.compile(
                 # optimizer=tf.keras.optimizers.RMSprop(
@@ -164,18 +166,24 @@ class KerasClassifier(Classifier):
                 metrics=[tf.keras.metrics.CategoricalAccuracy()],
             )
 
+            # Open the file
+            with open('summary_fine-tuning.txt','w') as fh:
+                # Pass the file handle in as a lambda function to make it callable
+                self.model.summary(print_fn=lambda x: fh.write(x + '\n'))
+
             try: # if transfer_learning before
                 history
                 initial_epoch = history.epoch[-1]
             except NameError:
                 initial_epoch = 0
+                # history tf.keras.callbacks.History()
 
             history = self.model.fit(
                 train_dataset,
                 initial_epoch=initial_epoch,
                 epochs=initial_epoch + fine_tuning_epochs + 1,
                 validation_data=validation_dataset,
-                callbacks=[tensorboard_callback, es, mc, cc],
+                callbacks=[tensorboard_callback, es, mc, cc, history],
             )
 
         return history, cc
@@ -209,8 +217,6 @@ class CustomCallback(tf.keras.callbacks.Callback):
     #     print("End epoch {} of training; got log keys: {}".format(epoch, keys))
 
     def on_epoch_end(self, epoch, logs=None):
-        keys = list(logs.keys())
-        print("Train ends, keys {}".format(keys))
         val_all_preds = []
         val_all_labels = []
         for i, val_batch_data in enumerate(self.validation_data):
