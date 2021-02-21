@@ -9,7 +9,7 @@ import tensorflow as tf
 from src.settings.settings import paths
 from tensorflow.keras.preprocessing import image_dataset_from_directory
 from src.settings.settings import logging
-
+from src.tools import autoaugment
 
 def create_train_test_folders(dest_dir: str, image_file: str) -> None:
     """Creates the dest_dir folder from the list of images in image_file.
@@ -82,15 +82,18 @@ def manual_get_datasets(train_data_dir, test_data_dir, params):
         return img
 
     def img_aug(img):
-        seq = iaa.Sequential([
-            iaa.CropAndPad(percent=(-0.25, 0.25)),
-            iaa.Rotate((-45, 45)),
-            iaa.Fliplr(0.5),
-        ])
-        # TODO 
-        # add translation
-        # gaussian noise
-        img = seq(image=img)
+        # seq = iaa.Sequential([
+        #     iaa.CropAndPad(percent=(-0.25, 0.25)),
+        #     iaa.Rotate((-45, 45)),
+        #     iaa.Fliplr(0.5),
+        # ])
+        # # TODO 
+        # # add translation
+        # # gaussian noise
+        # img = seq(image=img)
+
+        img = autoaugment.distort_image_with_autoaugment(img, 'v0')
+
         return img
 
 
@@ -124,6 +127,7 @@ def manual_get_datasets(train_data_dir, test_data_dir, params):
             img = resize_img(img)
 
         if augment:
+            # img = img_aug(img)
             img = tf_img_aug(img)
             img = tf.reshape(img, shape=(params["img_height"], params["img_width"], params["img_n_channels"]))
 

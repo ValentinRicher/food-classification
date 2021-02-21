@@ -23,7 +23,7 @@ class EfficientNetB4(KerasClassifier):
         else:
             raise("Transfer learning or fine tuning or both must be selected")
 
-        # import time
+        # import time@
         # print("Load model")
         # time.sleep(30)
 

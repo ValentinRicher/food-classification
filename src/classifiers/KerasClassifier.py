@@ -110,6 +110,7 @@ class KerasClassifier(Classifier):
 
 
             # tf.keras.optimizers.Adam(lr=learning_rate)
+            # lr_decayed_fn = tf.keras.experimental.CosineDecay(initial_learning_rate=learning_rate, decay_steps=100)
 
             self.model.compile(
                 # optimizer=tf.keras.optimizers.RMSprop(
@@ -121,6 +122,7 @@ class KerasClassifier(Classifier):
                 #     name="RMSprop",
                 # ),
                 optimizer=tf.keras.optimizers.Adam(lr=learning_rate),
+                # optimizer=tf.keras.optimizers.SGD(learning_rate=lr_decayed_fn),
                 loss=tf.keras.losses.CategoricalCrossentropy(),
                 metrics=[tf.keras.metrics.CategoricalAccuracy()],
             )
@@ -162,6 +164,7 @@ class KerasClassifier(Classifier):
                 #     name="RMSprop",
                 # ),
                 optimizer=tf.keras.optimizers.Adam(lr=fine_tuning_lr),
+                # optimizer=tf.keras.optimizers.SGD(learning_rate=lr_decayed_fn),
                 loss=tf.keras.losses.CategoricalCrossentropy(),
                 metrics=[tf.keras.metrics.CategoricalAccuracy()],
             )

@@ -10,6 +10,8 @@ This project has 2 goals :
 
 Create a virtual environment and install librairies in `requirements.txt`
 
+# Organization of the project
+
 # Benchmark
 
 https://paperswithcode.com/sota/fine-grained-image-classification-on-food-101
