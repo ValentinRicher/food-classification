@@ -80,3 +80,6 @@ https://github.com/stratospark/food-101-keras
 # Results
 
 # How to 
+
+
+(./coverage.svg)
