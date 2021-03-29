@@ -17,7 +17,7 @@ k6:
 	docker-compose run k6 run /scripts/load_test_1.js --summary-export=AKS_load_test_1.json
 
 coverage: ## to check how many lines of codes are tested
-	coverage run --source=src/ -m unittest discover -s tests/
+	coverage run --source=src/ -m unittest discover -s tests/unit_tests
 	coverage report -m
 
 safety: ## to check the safety of packages / NEED AN INTERNET CONNECTION
