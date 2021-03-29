@@ -92,9 +92,9 @@ def train(exp_name, tracking_uri):
         elif exp_name == "xception":
             model = Xception((params["img_height"], params["img_width"], params["img_n_channels"]))
         elif exp_name == "efficientnetb0":
-            model = EfficientNetB0(transfer_learning=True, fine_tuning=True, input_shape=(params["img_height"], params["img_width"], params["img_n_channels"]), weights=os.path.join(paths["model"]["WEIGHTS_DIR"], params["weights"]))
+            model = EfficientNetB0(transfer_learning=params["transfer_learning"], fine_tuning=params["fine_tuning"], input_shape=(params["img_height"], params["img_width"], params["img_n_channels"]), weights=os.path.join(paths["model"]["WEIGHTS_DIR"], params["weights"]))
         elif exp_name == "efficientnetb4":
-            model = EfficientNetB4((params["img_height"], params["img_width"], params["img_n_channels"]))
+            model = EfficientNetB4(transfer_learning=params["transfer_learning"], fine_tuning=params["fine_tuning"], input_shape=(params["img_height"], params["img_width"], params["img_n_channels"]), weights=os.path.join(paths["model"]["WEIGHTS_DIR"], params["weights"]))
 
 
 

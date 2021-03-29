@@ -1,10 +1,10 @@
 img_height: 380
 img_width: 380
 img_n_channels: 3
-transfer_learning: True
+transfer_learning: False
 n_epochs: 50
 learning_rate: 0.0001
-batch_size: 8
+batch_size: 4
 fine_tuning: True
 fine_tuning_epochs: 50
 fine_tuning_lr: 0.00001

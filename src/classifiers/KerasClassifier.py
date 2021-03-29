@@ -177,17 +177,24 @@ class KerasClassifier(Classifier):
             try: # if transfer_learning before
                 history
                 initial_epoch = history.epoch[-1]
+                history = self.model.fit(
+                    train_dataset,
+                    initial_epoch=initial_epoch,
+                    epochs=initial_epoch + fine_tuning_epochs + 1,
+                    validation_data=validation_dataset,
+                    callbacks=[tensorboard_callback, es, mc, cc, history],
+                )
             except NameError:
                 initial_epoch = 0
+                history = self.model.fit(
+                    train_dataset,
+                    initial_epoch=initial_epoch,
+                    epochs=initial_epoch + fine_tuning_epochs + 1,
+                    validation_data=validation_dataset,
+                    callbacks=[tensorboard_callback, es, mc, cc],
+                )
                 # history tf.keras.callbacks.History()
 
-            history = self.model.fit(
-                train_dataset,
-                initial_epoch=initial_epoch,
-                epochs=initial_epoch + fine_tuning_epochs + 1,
-                validation_data=validation_dataset,
-                callbacks=[tensorboard_callback, es, mc, cc, history],
-            )
 
         return history, cc
 

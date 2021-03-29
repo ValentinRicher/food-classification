@@ -17,9 +17,11 @@ class EfficientNetB4(KerasClassifier):
     def __init__(self, transfer_learning, fine_tuning, input_shape, weights):
         super().__init__()
         if transfer_learning:
+            logging.debug('Transfer learning : creating model')
             self.model = self.create_model(input_shape)
         elif fine_tuning: # fine-tuning only
-            self.model = tf.keras.load_model(weights)
+            logging.info('Fine tunning : loading model')
+            self.model = tf.keras.models.load_model(weights)
         else:
             raise("Transfer learning or fine tuning or both must be selected")
 
