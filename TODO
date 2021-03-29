@@ -1,5 +1,10 @@
-data augmentation
-rmsprop optimizer
-classification head
-resolve graphs display
-get the number of parameters of the model
+- data augmentation -> OK
+- rmsprop optimizer -> OK
+- classification head -> OK
+- resolve graphs display -> OK
+- get the number of parameters of the model -> OK
+
+- organization of the project -> OK
+- present the problem
+- present results 
+- add code coverage badge
