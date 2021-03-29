@@ -82,4 +82,4 @@ https://github.com/stratospark/food-101-keras
 # How to 
 
 
-(./coverage.svg)
+![coverage](./coverage.svg)
