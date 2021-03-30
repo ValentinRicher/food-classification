@@ -79,7 +79,28 @@ https://github.com/stratospark/food-101-keras
 
 # Results
 
+Best result for EfficientNetB4 : 86.3% of accuracy.
+Parameters used :  
+aug_factor	1
+augment	True
+batch_size	4
+dataset	food-101/
+fine_tuning	True
+fine_tuning_epochs	50
+fine_tuning_lr	1e-05
+img_height	380
+img_n_channels	3
+img_width	380
+learning_rate	0.0001
+n_epochs	50
+resize	True
+test_mode	0
+transfer_learning	True
+weights	efficientnetb4/best_model.h5
+
+![confusion_matrix](./confusion_matrix.png)
+
 # How to 
 
 
-![coverage](./coverage.svg)
+![coverage](./coverage.svg) 
