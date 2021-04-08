@@ -74,7 +74,7 @@ All the utility files that are reused across the project.
 Food-101 contains 101 classes of food among apple pie, edamame, chocolate mouse or chocolate cake. You can find all the 101 classes in the [classes](./src/tools/classes.txt) file.
 
 Here is an excerpt of 5 photos for each class :  
-![food images](./notebooks/images_grid.png)
+![food images](./images_grid.png)
 
 There are :
 - 75750 train images with each class containing 750 images
