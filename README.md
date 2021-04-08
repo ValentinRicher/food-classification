@@ -3,7 +3,7 @@
 Personal project for image classification on Food-101 dataset.  
 This project has 2 goals :
 - Optimize training time with TF Profiler -> DONE. I divided by 3 training times.
-- Get best performance on Food-101 dataset using transfer learning and fine-tuning techniques based on papers in references.txt. -> IN PROGRESS.
+- Get best performance on Food-101 dataset using transfer learning and fine-tuning techniques based on papers in references.txt. -> DONE.
 - Intelligibility of the decisions taken by the algorithm. -> TODO.
 
 # Setup 
@@ -24,7 +24,6 @@ Create a virtual environment and install librairies in `requirements.txt`
 ### `src/application`
 
 All the files to launch the application like the training or the prediction. These files call other files defined in other folders. This folder is here to centralized the different entry points of the project.  
-Here there are different training possibilities if you want to train on Azure or on an on-premise server. The two files or entry points will call the same training pipeline.  
 
 - `src/application/train_local.py` is an entry point for the project. You specify the tracking URI and the experiment name for MLflow. The experiment name is also used in the `src/pipelines/mlflow_train_pipeline.py` file to choose the right model.
 - `src/application/predict_from_served_model.py` can call a model served with MLflow format locally or on Azure. The images need to be encoded in base 64 before being sent over HTTP. Then the images are stored in pandas DataFrame as required by MLflow. 
@@ -72,6 +71,15 @@ All the utility files that are reused across the project.
 
 # Problem presentation
 
+Food-101 contains 101 classes of food among apple pie, edamame, chocolate mouse or chocolate cake. You can find all the 101 classes in the [classes](./src/tools/classes.txt) file.
+
+Here is an excerpt of 5 photos for each class :  
+![food images](./notebooks/images_grid.png)
+
+There are :
+- 75750 train images with each class containing 750 images
+- 25251 test images with each class containing 250 images
+
 # Benchmark
 
 https://paperswithcode.com/sota/fine-grained-image-classification-on-food-101
@@ -79,24 +87,42 @@ https://github.com/stratospark/food-101-keras
 
 # Results
 
-Best result for EfficientNetB4 : 86.3% of accuracy.
+Best result for EfficientNetB4 : *86.3%* of accuracy.  
+  
 Parameters used :  
-aug_factor	1
-augment	True
-batch_size	4
-dataset	food-101/
-fine_tuning	True
-fine_tuning_epochs	50
-fine_tuning_lr	1e-05
-img_height	380
-img_n_channels	3
-img_width	380
-learning_rate	0.0001
-n_epochs	50
-resize	True
-test_mode	0
-transfer_learning	True
-weights	efficientnetb4/best_model.h5
+- aug_factor	1  
+- augment	True  
+- batch_size	4  
+- dataset	food-101/  
+- fine_tuning	True  
+- fine_tuning_epochs	50  
+- fine_tuning_lr	1e-05  
+- img_height	380  
+- img_n_channels	3  
+- img_width	380  
+- learning_rate	0.0001  
+- n_epochs	50  
+- resize	True  
+- test_mode	0  
+- transfer_learning	True  
+- weights	efficientnetb4/best_model.h5  
+
+## Best results
+
+The best precision, recall, f1-score and accuracy are for the class Edamame with scores of 1, 0.996, 0.997 and 1. When we look at the Edamame pictures from the grid of images, we see that Edamame can be very differentiated due to their green vivid color and particular form. 
+
+## Lowest results
+
+Lowest precision is for Ravioli : 0.64  
+Lowest recall, f1-score and accuracy is for Steak : 0.5 , 0.56, 0.5  
+
+If we look at the confusion matrix for Steak we see that the classes with which it is mistaken are :
+- Prime rib : 7% of the time
+- Filet mignon 6% of the time
+- Baby back ribs 4% of the time
+- Pork chop 4% of the time  
+This is understandable because this meal are all meat.  
+
 
 ![confusion_matrix](./confusion_matrix.png)
 

@@ -6,10 +6,10 @@ from pathlib import Path
 import imgaug.augmenters as iaa
 import numpy as np
 import tensorflow as tf
-from src.settings.settings import paths
-from tensorflow.keras.preprocessing import image_dataset_from_directory
-from src.settings.settings import logging
+from src.settings.settings import logging, paths
 from src.tools import autoaugment
+from tensorflow.keras.preprocessing import image_dataset_from_directory
+
 
 def create_train_test_folders(dest_dir: str, image_file: str) -> None:
     """Creates the dest_dir folder from the list of images in image_file.

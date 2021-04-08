@@ -101,4 +101,3 @@ def convert_from_jpg_to_jpeg(old_dir, new_dir):
     # resize_images("/home/vricher/example-image/data/food-101", 224, 224)
     # read_images("/home/vricher/example-image/data/food-101_160_160")
     
-

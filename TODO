@@ -5,7 +5,9 @@
 - get the number of parameters of the model -> OK
 
 - organization of the project -> OK
-- present the problem
+- present the problem : grid of images, number of images per class -> OK
 - present results 
 - add code coverage badge
 - doc
+
+- class activation map
