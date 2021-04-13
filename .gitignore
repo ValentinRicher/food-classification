@@ -179,6 +179,8 @@ emissions.csv
 # Remove some possible artifacts
 best_model.h5
 cm.png
+*.h5
+*.tflite
 
 # tmp removals
 HOWTO/
