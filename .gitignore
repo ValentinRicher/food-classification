@@ -10,9 +10,7 @@ out/
 # dossier données
 results/
 saved_models*/
-notebooks/
-notebook/
-!notebooks/images_grid.png
+
 
 # data yaml and output from models
 *.pdf
