@@ -7,7 +7,11 @@
 - organization of the project -> OK
 - present the problem : grid of images, number of images per class -> OK
 - present results -> OK
-- add code coverage badge
+- add code coverage badge -> OK
 - doc
+
+- input of efficientnet models -> OK
+- what preprocessing -> OK
+- quantization -> OK
 
 - class activation map

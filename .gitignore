@@ -10,7 +10,7 @@ out/
 # dossier données
 results/
 saved_models*/
-
+tflite_models/*
 
 # data yaml and output from models
 *.pdf

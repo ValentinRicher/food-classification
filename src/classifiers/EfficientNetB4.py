@@ -75,12 +75,14 @@ class EfficientNetB4(KerasClassifier):
         x : nd.array
             Image
         """
+        print(f'img in entry {x}')
         x = tf.keras.applications.efficientnet.preprocess_input(x)
         # x = tf.keras.layers.experimental.preprocessing.Resizing(
         #     height=160,
         #     width=160,
         #     interpolation="bilinear",
         # )(x)
+        print(f'img in output {x}')
 
         return x
 

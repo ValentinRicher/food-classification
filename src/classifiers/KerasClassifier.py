@@ -132,6 +132,7 @@ class KerasClassifier(Classifier):
                 # Pass the file handle in as a lambda function to make it callable
                 self.model.summary(print_fn=lambda x: fh.write(x + '\n'))
 
+            print(train_dataset)
             history = self.model.fit(
                 train_dataset,
                 epochs=n_epochs,
