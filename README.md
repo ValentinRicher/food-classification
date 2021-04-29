@@ -146,10 +146,12 @@ This is understandable because this meal are all meat.
 Finally we converted the best model using TensorFlow Lite with different quantization techniques.  
 
 *EfficientNetB4*
-- Accuracy for fp32 model lite 0.8428 at ~500ms inference for model size of 68M.  
-- Accuracy for fp16 model lite 0.8429 at ~500ms inference for model size of 34M.  (https://www.tensorflow.org/lite/performance/post_training_float16_quant)
-- Accuracy for int8 quantized model with fp32 input images at ~300ms inference for model size of 21M.
-- Accuracy for int8 quantized model with int8  input images at ~300ms inference for model size of 21M. (https://www.tensorflow.org/lite/performance/post_training_integer_quant)
+- fp32 model lite -> accuracy : 0.8428 / inference time : ~500ms / model size : 68M.  
+- fp16 model lite -> accuracy : 0.8429 / inference time : ~500ms / model size : 34M.  (https://www.tensorflow.org/lite/performance/post_training_float16_quant)
+- int8 quantized model with fp32 input images -> inference time : ~300ms / model size : 21M.
+- int8 quantized model with int8 input images -> inference time : ~300ms / model size : 21M. (https://www.tensorflow.org/lite/performance/post_training_integer_quant)
+
+Accuracy for int8 models are not available because there is a known problem with the invoke() function of the interpreter for int8 models. 
 
 Ressources for quantization  
 https://www.tensorflow.org/lite/performance/best_practices

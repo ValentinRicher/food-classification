@@ -7,6 +7,19 @@ import tensorflow as tf
 
 # A helper function to evaluate the TF Lite model using "test" dataset.
 def evaluate_model(interpreter):
+    """Evaluates the converted TF Lite model.
+    Unfortunately does not work with int8 models.
+
+    Parameters
+    ----------
+    interpreter : 
+        Interpreter for the TF Lite model.
+
+    Returns
+    -------
+    float
+        Accuracy of the model.
+    """
     input_index = interpreter.get_input_details()[0]["index"]
     output_index = interpreter.get_output_details()[0]["index"]
 
@@ -72,11 +85,11 @@ def evaluate_model(interpreter):
 
 
 if __name__ == '__main__':
-    # tflite_model_fp32_file = './tflite_models/model.tflite'
-    # interpreter_fp32 = tf.lite.Interpreter(model_path=str(tflite_model_fp32_file))
-    # interpreter_fp32.allocate_tensors()
-    # accuracy_fp32 = evaluate_model(interpreter_fp32)
-    # logging.info(f'Accuracy for fp32 model lite {accuracy_fp32}')
+    tflite_model_fp32_file = './tflite_models/model.tflite'
+    interpreter_fp32 = tf.lite.Interpreter(model_path=str(tflite_model_fp32_file))
+    interpreter_fp32.allocate_tensors()
+    accuracy_fp32 = evaluate_model(interpreter_fp32)
+    logging.info(f'Accuracy for fp32 model lite {accuracy_fp32}')
 
     # tflite_model_fp16_file = './tflite_models/model_fp16.tflite'
     # interpreter_fp16 = tf.lite.Interpreter(model_path=str(tflite_model_fp16_file))
@@ -90,8 +103,8 @@ if __name__ == '__main__':
     # interpreter_quant = evaluate_model(interpreter_quant)
     # logging.info(f'Accuracy for quant model lite {interpreter_quant}')
 
-    tflite_model_quant_int8_file = './tflite_models/model_quant_int8.tflite'
-    interpreter_quant_int8 = tf.lite.Interpreter(model_path=str(tflite_model_quant_int8_file))
-    interpreter_quant_int8.allocate_tensors()
-    interpreter_quant_int8 = evaluate_model(interpreter_quant_int8)
-    logging.info(f'Accuracy for quant model lite {interpreter_quant_int8}')
+    # tflite_model_quant_int8_file = './tflite_models/model_quant_int8.tflite'
+    # interpreter_quant_int8 = tf.lite.Interpreter(model_path=str(tflite_model_quant_int8_file))
+    # interpreter_quant_int8.allocate_tensors()
+    # interpreter_quant_int8 = evaluate_model(interpreter_quant_int8)
+    # logging.info(f'Accuracy for quant model lite {interpreter_quant_int8}')
