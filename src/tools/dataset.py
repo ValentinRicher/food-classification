@@ -11,15 +11,25 @@ from src.tools import autoaugment
 from tensorflow.keras.preprocessing import image_dataset_from_directory
 
 
-def create_train_test_folders(dest_dir: str, image_file: str) -> None:
+def create_train_test_folders(origin_dir: str, dest_dir: str, image_file: str) -> None:
     """Creates the dest_dir folder from the list of images in image_file.
 
     Parameters
     ----------
+    origin_dir : str
+        The folder containing all the images.
     dest_dir : str
         The destination folder where to send the images belonging to image_file.
     image_file : str
         The JSON file containing the images.
+
+
+    Example
+    -------
+    origin_dir = '/Users/vricher/Downloads/archive/food-101/food-101'
+    dest_dir = '/Users/vricher/Documents/formations/food-classification/data/food-101/test_directory'
+    image_file = '/Users/vricher/Downloads/archive/food-101/food-101/meta/test.json'
+    create_train_test_folders(origin_dir, dest_dir, image_file)
     """
 
     if os.path.exists(dest_dir):
@@ -31,14 +41,14 @@ def create_train_test_folders(dest_dir: str, image_file: str) -> None:
 
     for cat in test.keys():
         if not os.path.exists(Path(dest_dir, cat)):
-            os.mkdir(Path(dest_dir, cat))
+            os.makedirs(Path(dest_dir, cat))
 
         # parsing of the image name to get only the number and not the category
         test_images = [test_image.split(cat + "/")[1] for test_image in test[cat]]
         for test_image in test_images:
 
             shutil.copy(
-                Path(paths["FOOD_DIR"], "images", cat, test_image + ".jpg"),
+                Path(origin_dir, "images", cat, test_image + ".jpg"),
                 Path(dest_dir, cat, test_image + ".jpg"),
             )
 
@@ -178,3 +188,10 @@ def auto_get_datasets(train_dir, test_dir, params):
     validation_dataset = validation_dataset.prefetch(tf.data.experimental.AUTOTUNE)
 
     return train_dataset, validation_dataset
+
+if __name__ == '__main__':
+
+    origin_dir = '/Users/vricher/Downloads/archive/food-101/food-101'
+    dest_dir = '/Users/vricher/Documents/formations/food-classification/data/food-101/train_directory'
+    image_file = '/Users/vricher/Downloads/archive/food-101/food-101/meta/train.json'
+    create_train_test_folders(origin_dir, dest_dir, image_file)

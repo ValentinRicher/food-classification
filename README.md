@@ -11,7 +11,16 @@ This project has 2 goals :
 
 Create a virtual environment and install librairies in `requirements.txt`.  
 Download food-data on [Kaggle website](https://www.kaggle.com/dansbecker/food-101).   
-See the settings part in the next section to set up your own paths and variables.
+After downloading the data, create a `data` folder at the root of the project organized as follows :  
+|-data
+    |-food-101
+        |-test_directory
+        |-train-directory
+With the function `create_train_test_folder` in `src/tools/dataset.py` you will fill the `test_directory` and `train_directory` with the images from the train and test sets. This split is indicated in the files `train.json` and `test.json` in the `meta` folder of dataset downloaded. See docstring of the function to have more details.  
+
+For the paths setup, create your own folder `src/settings/` copying an existing folder like qbox and change the path accordingly.
+Then in the `src/settings/settings.py` change the variable ENV with the name of the folder you just created.
+See the settings part in the next section for more information.
 
 # Project organization
 

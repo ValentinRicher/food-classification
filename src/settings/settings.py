@@ -16,7 +16,7 @@ logging.getLogger('matplotlib').setLevel(logging.WARNING)
 TiffImagePlugin.DEBUG = False
 
 
-ENV = "qbox"  # the name of the environment matches the name of the folder in settings
+ENV = "local"  # the name of the environment matches the name of the folder in settings
 
 
 paths = ConfigFactory.parse_file(Path(__file__).parent.joinpath(str(ENV), "paths.conf"))
