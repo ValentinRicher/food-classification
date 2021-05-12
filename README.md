@@ -12,10 +12,10 @@ This project has 2 goals :
 Create a virtual environment and install librairies in `requirements.txt`.  
 Download food-data on [Kaggle website](https://www.kaggle.com/dansbecker/food-101).   
 After downloading the data, create a `data` folder at the root of the project organized as follows :  
-|-data
-    |-food-101
-        |-test_directory
-        |-train-directory
+|-data  
+|---|-food-101  
+|---|---|-test_directory  
+|---|---|-train-directory  
 With the function `create_train_test_folder` in `src/tools/dataset.py` you will fill the `test_directory` and `train_directory` with the images from the train and test sets. This split is indicated in the files `train.json` and `test.json` in the `meta` folder of dataset downloaded. See docstring of the function to have more details.  
 
 For the paths setup, create your own folder `src/settings/` copying an existing folder like qbox and change the path accordingly.
@@ -98,12 +98,14 @@ There are :
 
 # Benchmark
 
-https://paperswithcode.com/sota/fine-grained-image-classification-on-food-101
+https://paperswithcode.com/sota/fine-grained-image-classification-on-food-101  
 https://github.com/stratospark/food-101-keras
 
 # Results
 
-Best result for EfficientNetB4 : *86.3%* of accuracy.  
+## Best results
+
+Best result for EfficientNetB4 : *86.3%* of accuracy at epoch 55.
   
 Parameters used :  
 - aug_factor	1  
@@ -125,11 +127,11 @@ Parameters used :
 
 ![confusion_matrix](./confusion_matrix.png)
 
-## Best results
+### Class best results
 
 The best precision, recall, f1-score and accuracy are for the class Edamame with scores of 1, 0.996, 0.997 and 1. When we look at the Edamame pictures from the grid of images, we see that Edamame can be very differentiated due to their green vivid color and particular form. 
 
-## Lowest results
+### Class lowest results
 
 Lowest precision is for Ravioli : 0.64  
 Lowest recall, f1-score and accuracy is for Steak : 0.5 , 0.56, 0.5  
@@ -140,6 +142,45 @@ If we look at the confusion matrix for Steak we see that the classes with which 
 - Baby back ribs 4% of the time
 - Pork chop 4% of the time  
 This is understandable because this meal are all meat.  
+
+## Other results
+
+### EfficientNetB1
+
+Best result for EfficientNetB1 : *83.8%* of accuracy at epoch 11.
+  
+Parameters used :  
+- batch_size	8 
+- dataset	food-101/  
+- fine_tuning	True  
+- fine_tuning_epochs	50  
+- fine_tuning_lr	1e-05  
+- img_height	380  
+- img_n_channels	3  
+- img_width	380  
+- learning_rate	0.0001  
+- n_epochs	50  
+- test_mode	0  
+- transfer_learning	False  
+- weights	efficientnetb0/best_model.h5  
+
+### Xception
+
+Only result for Xception : *62.1%* of accuracy at epoch 6.
+  
+Parameters used :  
+- batch_size	32
+- dataset	food-101_160_160/  
+- fine_tuning	True  
+- fine_tuning_epochs	50  
+- fine_tuning_lr	1e-05  
+- img_height	160  
+- img_n_channels	3  
+- img_width	160  
+- learning_rate	0.0001  
+- n_epochs	50  
+- test_mode	0  
+
 
 # TFLite & Quantization
 
